@@ -8,7 +8,6 @@ from transformers import AutoTokenizer
 
 def build_dataloaders(
     sequence_length: int = 8192,
-    num_cpu: int = multiprocessing.cpu_count()
 ):
     """
     Build data loaders for training.
@@ -29,7 +28,6 @@ def build_dataloaders(
     tokenized_dataset = dataset.map(
         lambda example: tokenizer([t + tokenizer.eos_token for t in example["text"]]),
         batched=True,
-        num_proc=num_cpu,
         remove_columns=["text"],
     )
 
@@ -52,7 +50,7 @@ def build_dataloaders(
         return result
 
     train_dataset = tokenized_dataset.map(
-        group_texts, batched=True, num_proc=num_cpu,
+        group_texts, batched=True,
     )
 
     train_dataset.push_to_hub("biglaw-falcon-8k", private=True)
