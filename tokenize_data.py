@@ -29,7 +29,7 @@ def build_dataloaders(
         lambda example: tokenizer([t + tokenizer.eos_token for t in example["text"]]),
         batched=True,
         remove_columns=["text"],
-        num_proc=64,
+        num_proc=48,
     )
 
     block_size = sequence_length
@@ -51,7 +51,7 @@ def build_dataloaders(
         return result
 
     train_dataset = tokenized_dataset.map(
-        group_texts, batched=True, num_proc=64,
+        group_texts, batched=True, num_proc=48,
     )
 
     train_dataset.push_to_hub("biglaw-falcon-8k", private=True)
